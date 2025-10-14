@@ -45,7 +45,7 @@ class DatabaseHelper:
                 raise
             await session.commit()
 
-    async def local_session(self):
+    def local_session(self):
         return self.session_factory()
 
 

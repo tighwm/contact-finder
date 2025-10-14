@@ -1,10 +1,40 @@
-from pydantic import BaseModel, PostgresDsn
+import logging
+from typing import Literal
+
+from pydantic import BaseModel, PostgresDsn, AmqpDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+LOG_DEFAULT_FORMAT = (
+    "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
+)
+
+WORKER_LOG_DEFAULT_FORMAT = "[%(asctime)s.%(msecs)03d][%(processName)s] %(module)16s:%(lineno)-3d %(levelname)-7s - %(message)s"
+
+
+class LoggingConfig(BaseModel):
+    log_level: Literal[
+        "debug",
+        "info",
+        "warning",
+        "error",
+        "critical",
+    ] = "info"
+    log_format: str = LOG_DEFAULT_FORMAT
+    date_format: str = "%Y-%m-%d %H:%M:%S"
+
+    @property
+    def log_level_value(self) -> int:
+        return logging.getLevelNamesMapping()[self.log_level.upper()]
 
 
 class RunConfig(BaseModel):
     host: str = "0.0.0.0"
     port: int = 8000
+
+
+class TaskIQConfig(BaseModel):
+    url: AmqpDsn
+    log_format: str = WORKER_LOG_DEFAULT_FORMAT
 
 
 class DatabaseConfig(BaseModel):
@@ -32,7 +62,11 @@ class Settings(BaseSettings):
     )
     run: RunConfig = RunConfig()
 
+    logging: LoggingConfig = LoggingConfig()
+
     db: DatabaseConfig
+
+    taskiq: TaskIQConfig
 
 
 settings = Settings()

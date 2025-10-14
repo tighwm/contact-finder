@@ -1,9 +1,40 @@
+import logging
+from contextlib import asynccontextmanager
+
 import uvicorn
 from fastapi import FastAPI
 
+from core import broker
 from core.config import settings
+from core.models import db_helper
+from utils.importer import import_csv_if_not_exists
 
-app = FastAPI()
+logging.basicConfig(
+    level=settings.logging.log_level_value,
+    format=settings.logging.log_format,
+    datefmt=settings.logging.date_format,
+)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    session = db_helper.local_session()
+    await import_csv_if_not_exists(session)
+    await session.aclose()
+
+    if not broker.is_worker_process:
+        await broker.startup()
+
+    yield
+
+    if not broker.is_worker_process:
+        await broker.shutdown()
+
+    await db_helper.dispose()
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 if __name__ == "__main__":
