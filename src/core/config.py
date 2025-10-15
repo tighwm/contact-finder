@@ -53,6 +53,11 @@ class DatabaseConfig(BaseModel):
     }
 
 
+class NimbleAPIConfig(BaseModel):
+    token: str
+    base_url: str = "https://api.nimble.com/api/v1"
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=(".env.template", ".env"),
@@ -65,6 +70,8 @@ class Settings(BaseSettings):
     logging: LoggingConfig = LoggingConfig()
 
     db: DatabaseConfig
+
+    nimble: NimbleAPIConfig
 
     taskiq: TaskIQConfig
 
