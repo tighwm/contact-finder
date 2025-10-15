@@ -427,6 +427,7 @@ dependencies = [
     { name = "taskiq" },
     { name = "taskiq-aio-pika" },
     { name = "taskiq-fastapi" },
+    { name = "tenacity" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
@@ -447,6 +448,7 @@ requires-dist = [
     { name = "taskiq", specifier = ">=0.11.18" },
     { name = "taskiq-aio-pika", specifier = ">=0.4.3" },
     { name = "taskiq-fastapi", specifier = ">=0.3.5" },
+    { name = "tenacity", specifier = ">=9.1.2" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.37.0" },
 ]
 
@@ -804,6 +806,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/cd/29/d4f08a3730d23870f73404d855e5145d13d0bcf1e5376008522804afa51b/taskiq_fastapi-0.3.5.tar.gz", hash = "sha256:0df3df3e7e0a355b9f21a4f81429ad95d0d33af305e75039654ac13ae26c538f", size = 5102, upload-time = "2025-04-20T22:45:21.924Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b5/06/6ba382f300aebc5d739cd01d708572329d4360ea0c02b7734583a2894b16/taskiq_fastapi-0.3.5-py3-none-any.whl", hash = "sha256:35553cb05cfb8e34d50179bad747d79a42d782f5b9c529128ad64263af8c246f", size = 5116, upload-time = "2025-04-20T22:45:21.049Z" },
+]
+
+[[package]]
+name = "tenacity"
+version = "9.1.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0a/d4/2b0cd0fe285e14b36db076e78c93766ff1d529d70408bd1d2a5a84f1d929/tenacity-9.1.2.tar.gz", hash = "sha256:1169d376c297e7de388d18b4481760d478b0e99a777cad3a9c86e556f4b697cb", size = 48036, upload-time = "2025-04-02T08:25:09.966Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e5/30/643397144bfbfec6f6ef821f36f33e57d35946c44a2352d3c9f0ae847619/tenacity-9.1.2-py3-none-any.whl", hash = "sha256:f77bf36710d8b73a50b2dd155c97b870017ad21afe6ab300326b0371b3b05138", size = 28248, upload-time = "2025-04-02T08:25:07.678Z" },
 ]
 
 [[package]]
