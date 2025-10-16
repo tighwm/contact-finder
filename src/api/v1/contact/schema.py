@@ -41,7 +41,7 @@ class NimbleMeta(BaseModel):
 
 
 class NimbleResponse(BaseModel):
-    resources: list[NimbleResource]
+    resources: list[NimbleResource] = Field(default_factory=list)
     meta: NimbleMeta
 
 
