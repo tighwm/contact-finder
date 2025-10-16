@@ -26,4 +26,5 @@ dev = [
 test = [
     "pytest>=8.4.2",
     "pytest-asyncio>=1.2.0",
+    "testcontainers[postgres]>=4.13.2",
 ]
