@@ -69,5 +69,5 @@ class ContactNimble(ContactBase):
 
 class ContactSchema(ContactNimble):
     id: int
-
+    nimble_id: str | None = None
     model_config = ConfigDict(from_attributes=True)

@@ -13,13 +13,13 @@ async def get_contacts_by_query(
 ) -> Sequence[Contact]:
     to_search = func.to_tsvector(
         "english",
-        Contact.first_name
-        + " "
-        + Contact.last_name
-        + " "
-        + Contact.email
-        + " "
-        + Contact.description,
+        func.concat_ws(
+            " ",
+            func.coalesce(Contact.first_name, ""),
+            func.coalesce(Contact.last_name, ""),
+            func.coalesce(Contact.email, ""),
+            func.coalesce(Contact.description, ""),
+        ),
     )
     condition = to_search.op("@@")(func.plainto_tsquery("english", query))
 
