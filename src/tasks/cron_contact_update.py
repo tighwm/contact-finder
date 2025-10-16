@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 NIMBLE_CONTACTS_ENDPOINT = "/contacts"
 
 
-def extract_contacts_from_responses_as_dicts(
+def extract_contacts_from_response_as_dicts(
     response: NimbleResponse,
 ) -> list[dict[str, Any]]:
     """Extracting contacts as dicts from NimbleResponse object for inserting to db"""
@@ -98,7 +98,10 @@ async def update_contacts_per_day(
     ],
 ) -> None:
     async for response in fetch_contacts_pages_agen(client):
-        contacts = extract_contacts_from_responses_as_dicts(response)
+        contacts = extract_contacts_from_response_as_dicts(response)
+        if not contacts:
+            log.info("No contacts to insert/update.")
+            break
         result = await batch_insert_contacts(
             session=session,
             contacts=contacts,
