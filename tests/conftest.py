@@ -4,24 +4,32 @@ from pathlib import Path
 import pytest
 from sqlalchemy import Connection
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from testcontainers.postgres import PostgresContainer
 from alembic.config import Config
 from alembic import command
-from starlette.testclient import TestClient
 
 
 os.environ.update(
     {
-        "APP_CONFIG__DB__URL": "postgresql+asyncpg://nimble:secret@localhost:5432/nimble",
         "APP_CONFIG__TASKIQ__URL": "amqp://guest:guest@localhost:5672//",
+        "APP_CONFIG__NIMBLE__TOKEN": "",
     }
 )
 
-from main import app
-from core.config import settings
-from core.models import db_helper
-
 here = Path(__file__).resolve()
 alembic_ini = here.parent.parent / "src" / "alembic.ini"
+
+
+@pytest.fixture(scope="session")
+def postgres_container():
+    with PostgresContainer(
+        username="nimble",
+        password="secret",
+        dbname="nimble",
+        driver="asyncpg",
+    ) as postgres:
+        os.environ["APP_CONFIG__DB__URL"] = postgres.get_connection_url()
+        yield postgres
 
 
 def run_alembic_migration(
@@ -34,9 +42,9 @@ def run_alembic_migration(
 
 
 @pytest.fixture(scope="session")
-async def engine():
+async def engine(postgres_container):
     engine = create_async_engine(
-        url=str(settings.db.url),
+        url=postgres_container.get_connection_url(),
         echo=False,
     )
 
@@ -63,17 +71,3 @@ async def session(session_maker):
     async with session_maker() as async_session:
         yield async_session
         await async_session.rollback()
-
-
-async def override_session_getter():
-    session = db_helper.local_session()
-    yield session
-    await session.rollback()
-    await session.aclose()
-
-
-@pytest.fixture(scope="session")
-def client(engine):
-    test_client = TestClient(app)
-    app.dependency_overrides[db_helper.session_getter] = override_session_getter  # noqa
-    yield test_client
