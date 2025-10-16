@@ -23,3 +23,7 @@ dependencies = [
 dev = [
     "black>=25.9.0",
 ]
+test = [
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+]
