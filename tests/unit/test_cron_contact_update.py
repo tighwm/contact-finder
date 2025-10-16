@@ -1,47 +1,13 @@
 from unittest.mock import AsyncMock, Mock
 
 import pytest
+from httpx import HTTPStatusError
 
 
-@pytest.fixture()
-def httpx_client_mock():
-    from httpx import AsyncClient
-
-    return AsyncMock(spec=AsyncClient)
-
-
-def test_extract_contacts_from_response_as_dicts():
+def test_extract_contacts_from_response_as_dicts(dummy_response_from_nimble):
     from tasks.cron_contact_update import extract_contacts_from_response_as_dicts
-    from api.v1.contact.schema import (
-        NimbleResponse,
-        NimbleMeta,
-        NimbleFields,
-        NimbleResource,
-        FieldValue,
-    )
 
-    dummy_response = NimbleResponse(
-        meta=NimbleMeta(
-            page=1,
-            pages=2,
-            per_page=12,
-            total=123,
-        ),
-        resources=[
-            NimbleResource(
-                id="abc123",
-                record_type="person",
-                fields=NimbleFields(
-                    email=[
-                        FieldValue(value="super@mail.com"),
-                        FieldValue(value="stupid@mail.com"),
-                    ],
-                ),
-            ),
-        ],
-    )
-
-    result = extract_contacts_from_response_as_dicts(dummy_response)
+    result = extract_contacts_from_response_as_dicts(dummy_response_from_nimble)
 
     assert result == [
         {
@@ -77,7 +43,6 @@ async def test_fetch_contacts(httpx_client_mock):
 
 
 async def test_fetch_contacts_error(httpx_client_mock):
-    from httpx import HTTPStatusError
     from tasks.cron_contact_update import fetch_contacts
 
     response_mock = Mock()

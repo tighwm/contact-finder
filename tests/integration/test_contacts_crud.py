@@ -1,6 +1,9 @@
+from sqlalchemy import select
+
+
 async def test_get_contacts_by_query(session):
-    from api.v1.contact.crud import get_contacts_by_query
     from core.models import Contact
+    from api.v1.contact.crud import get_contacts_by_query
 
     ryan = Contact(first_name="ryan", last_name="gosling")
     thomas = Contact(first_name="thomas", last_name="gosling")
@@ -40,10 +43,8 @@ async def test_batch_insert_contacts(session):
 
 
 async def test_batch_insert_contacts_with_conflict(session):
-    from sqlalchemy import select
-
-    from api.v1.contact.crud import batch_insert_contacts
     from core.models import Contact
+    from api.v1.contact.crud import batch_insert_contacts
 
     sasha = Contact(
         first_name="sasha",

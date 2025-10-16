@@ -1,9 +1,10 @@
 import pytest
 
+from sqlalchemy import text
+
 
 async def test_db_helper_session_getter_rollback(postgres_container):
     from core.models.db_helper import DatabaseHelper
-    from sqlalchemy import text
 
     db_helper = DatabaseHelper(url=postgres_container.get_connection_url())
 

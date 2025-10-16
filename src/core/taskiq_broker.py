@@ -4,17 +4,26 @@ __all__ = (
 )
 
 import logging
+import os
 
 import httpx
 import taskiq_fastapi
-from taskiq import TaskiqEvents, TaskiqState, TaskiqScheduler
+from taskiq import TaskiqEvents, TaskiqState, TaskiqScheduler, InMemoryBroker
 from taskiq.schedule_sources import LabelScheduleSource
 from taskiq_aio_pika import AioPikaBroker
-from core.config import settings
 
 log = logging.getLogger(__name__)
 
-broker = AioPikaBroker(url=str(settings.taskiq.url))
+env = os.environ.get("ENVIRONMENT")
+
+
+if env and env == "pytest":
+    broker = InMemoryBroker()
+else:
+    from core.config import settings
+
+    broker = AioPikaBroker(url=str(settings.taskiq.url))
+
 taskiq_fastapi.init(broker, "main:app")
 
 scheduler = TaskiqScheduler(
