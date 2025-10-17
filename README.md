@@ -97,16 +97,21 @@ Returns contacts matching the search query across first name, last name, email, 
 
 ## Testing
 
+Install tests deps:
+```bash
+uv sync --group test
+```
+
 Run tests:
 ```bash
 pytest tests
 ```
 
 Tests include:
-- Unit tests for CRUD operations
-- Integration tests for API endpoints
-- Full-text search validation
-- Batch insert/update operations
+- API tests
+- Unit tests 
+- Integration tests 
+
 
 ## Project Structure
 
