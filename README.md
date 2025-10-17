@@ -83,17 +83,7 @@ The worker will sync contacts from Nimble API daily.
 
 ### API Endpoints
 
-**Search contacts:**
-```bash
-GET /api/v1/contacts/search?q=<search_query>
-```
-
-Example:
-```bash
-curl "http://0.0.0.0:8000/api/v1/contacts/search?q=john"
-```
-
-Returns contacts matching the search query across first name, last name, email, and description fields.
+![](assets/docs.png)
 
 ## Testing
 
